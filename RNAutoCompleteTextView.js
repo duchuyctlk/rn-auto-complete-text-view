@@ -7,6 +7,7 @@ class RNAutoCompleteTextView extends React.Component {
     super(props);
     
     this.onItemClick = this.onItemClick.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
   }
 
   render() {
@@ -15,10 +16,12 @@ class RNAutoCompleteTextView extends React.Component {
 
   componentWillMount() {
     DeviceEventEmitter.addListener('onItemClick', this.onItemClick);
+    DeviceEventEmitter.addListener('onDismiss', this.onDismiss);
   }
 
   componentWillUnmount() {
     DeviceEventEmitter.removeListener('onItemClick', this.onItemClick);
+    DeviceEventEmitter.removeListener('onDismiss', this.onDismiss);
   }
 
   onItemClick(event: Event) {
@@ -26,6 +29,13 @@ class RNAutoCompleteTextView extends React.Component {
       return;
     }
     this.props.onItemClick(event.clickedItem);
+  }
+
+  onDismiss(event: Event) {
+    if (!this.props.onDismiss) {
+      return;
+    }
+    this.props.onDismiss(event);
   }
 }
 
@@ -37,6 +47,7 @@ RNAutoCompleteTextView.propTypes = {
   showDropDown: PropTypes.bool,
 
   onItemClick: PropTypes.func,
+  onDismiss: PropTypes.func,
 
   ...View.propTypes
 };

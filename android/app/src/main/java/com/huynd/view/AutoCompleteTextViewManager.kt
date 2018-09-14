@@ -13,6 +13,7 @@ import com.facebook.react.uimanager.annotations.ReactProp
 import com.huynd.view.Constants.Companion.EVENT_ON_DISMISS
 import com.huynd.view.Constants.Companion.EVENT_ON_ITEM_CLICK
 import com.huynd.view.Constants.Companion.EVENT_REGISTRATION_NAME
+import com.huynd.view.listeners.OnDismissListener
 import com.huynd.view.listeners.OnItemClickListener
 
 class AutoCompleteTextViewManager : SimpleViewManager<AutoCompleteTextView>() {
@@ -47,12 +48,14 @@ class AutoCompleteTextViewManager : SimpleViewManager<AutoCompleteTextView>() {
     mContext = reactContext
     return AutoCompleteTextView(reactContext).apply {
       onItemClickListener = OnItemClickListener(reactContext)
+      setOnDismissListener(OnDismissListener(reactContext))
     }
   }
 
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
     return MapBuilder.builder<String, Any>()
         .put(EVENT_ON_ITEM_CLICK, MapBuilder.of(EVENT_REGISTRATION_NAME, EVENT_ON_ITEM_CLICK))
+        .put(EVENT_ON_DISMISS, MapBuilder.of(EVENT_REGISTRATION_NAME, EVENT_ON_DISMISS))
         .build()
   }
 

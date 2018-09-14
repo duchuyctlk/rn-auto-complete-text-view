@@ -6,5 +6,7 @@ class Constants {
 
     const val EVENT_ON_ITEM_CLICK = "onItemClick"
     const val EVENT_ON_ITEM_CLICK_KEY_CLICKED_ITEM = "clickedItem"
+
+    const val EVENT_ON_DISMISS = "onDismiss"
   }
 }
