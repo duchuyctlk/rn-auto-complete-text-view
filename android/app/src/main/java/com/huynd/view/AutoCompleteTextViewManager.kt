@@ -6,11 +6,16 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
+import com.huynd.view.Constants.Companion.EVENT_ON_DISMISS
+import com.huynd.view.Constants.Companion.EVENT_ON_ITEM_CLICK
+import com.huynd.view.Constants.Companion.EVENT_REGISTRATION_NAME
+import com.huynd.view.listeners.OnItemClickListener
 
-class AutoCompleteTextViewManager: SimpleViewManager<AutoCompleteTextView>() {
+class AutoCompleteTextViewManager : SimpleViewManager<AutoCompleteTextView>() {
 
   private lateinit var mContext: Context
 
@@ -40,7 +45,15 @@ class AutoCompleteTextViewManager: SimpleViewManager<AutoCompleteTextView>() {
 
   override fun createViewInstance(reactContext: ThemedReactContext): AutoCompleteTextView {
     mContext = reactContext
-    return AutoCompleteTextView(reactContext)
+    return AutoCompleteTextView(reactContext).apply {
+      onItemClickListener = OnItemClickListener(reactContext)
+    }
+  }
+
+  override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
+    return MapBuilder.builder<String, Any>()
+        .put(EVENT_ON_ITEM_CLICK, MapBuilder.of(EVENT_REGISTRATION_NAME, EVENT_ON_ITEM_CLICK))
+        .build()
   }
 
   @ReactProp(name = REACT_PROP_DATA_SOURCE)
@@ -49,7 +62,7 @@ class AutoCompleteTextViewManager: SimpleViewManager<AutoCompleteTextView>() {
     dataSource.toArrayList().forEach {
       list.add(it.toString())
     }
-    val adapter = object: ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, list) {}
+    val adapter = object : ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, list) {}
     view.setAdapter(adapter)
   }
 
@@ -72,7 +85,7 @@ class AutoCompleteTextViewManager: SimpleViewManager<AutoCompleteTextView>() {
 
   @ReactProp(name = REACT_PROP_SHOW_DROP_DOWN)
   fun showDropDown(view: AutoCompleteTextView, show: Boolean) {
-    with (view) {
+    with(view) {
       if (show) {
         showDropDown()
       } else {
