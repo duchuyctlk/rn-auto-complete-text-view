@@ -1,6 +1,7 @@
 package com.huynd.view
 
 import android.content.Context
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import com.facebook.react.bridge.ReadableArray
@@ -14,16 +15,23 @@ class AutoCompleteTextViewManager: SimpleViewManager<AutoCompleteTextView>() {
   private lateinit var mContext: Context
 
   companion object {
-    const val REACT_CLASS = "NativeAutoCompleteTextView"
+    private const val REACT_CLASS = "NativeAutoCompleteTextView"
 
-    const val REACT_PROP_DATA_SOURCE = "dataSource"
-    const val REACT_PROP_TEXT = "text"
-    const val REACT_PROP_COMPLETION_HINT = "completionHint"
-    const val REACT_PROP_COMPLETION_THRESHOLD = "completionThreshold"
-    const val REACT_PROP_SHOW_DROP_DOWN = "showDropDown"
+    private const val REACT_PROP_DATA_SOURCE = "dataSource"
+    private const val REACT_PROP_TEXT = "text"
+    private const val REACT_PROP_COMPLETION_HINT = "completionHint"
+    private const val REACT_PROP_COMPLETION_THRESHOLD = "completionThreshold"
+    private const val REACT_PROP_SHOW_DROP_DOWN = "showDropDown"
+    private const val REACT_PROP_DROP_DOWN_HEIGHT = "dropDownHeight"
+    private const val REACT_PROP_DROP_DOWN_WIDTH = "dropDownWidth"
+    private const val REACT_PROP_DROP_DOWN_HORIZONTAL_OFFSET = "dropDownHorizontalOffset"
+    private const val REACT_PROP_DROP_DOWN_VERTICAL_OFFSET = "dropDownVerticalOffset"
 
-    const val PARAM_TEXT = "text"
-    const val PARAM_FILTER = "filter"
+    private const val PARAM_TEXT = "text"
+    private const val PARAM_FILTER = "filter"
+
+    private const val MATCH_PARENT = "match_parent"
+    private const val WRAP_CONTENT = "wrap_content"
   }
 
   override fun getName(): String {
@@ -64,8 +72,41 @@ class AutoCompleteTextViewManager: SimpleViewManager<AutoCompleteTextView>() {
 
   @ReactProp(name = REACT_PROP_SHOW_DROP_DOWN)
   fun showDropDown(view: AutoCompleteTextView, show: Boolean) {
-    if (show) {
-      view.showDropDown()
+    with (view) {
+      if (show) {
+        showDropDown()
+      } else {
+        dismissDropDown()
+      }
     }
+  }
+
+  @ReactProp(name = REACT_PROP_DROP_DOWN_HEIGHT)
+  fun setDropDownHeight(view: AutoCompleteTextView, value: String) {
+    view.dropDownHeight = getLayoutSizeValue(value)
+  }
+
+  @ReactProp(name = REACT_PROP_DROP_DOWN_WIDTH)
+  fun setDropDownWidth(view: AutoCompleteTextView, value: String) {
+    view.dropDownWidth = getLayoutSizeValue(value)
+  }
+
+  @ReactProp(name = REACT_PROP_DROP_DOWN_HORIZONTAL_OFFSET)
+  fun setDropDownHorizontalOffset(view: AutoCompleteTextView, offsetInDp: Int) {
+    view.dropDownHorizontalOffset = dpToPixels(offsetInDp)
+  }
+
+  @ReactProp(name = REACT_PROP_DROP_DOWN_VERTICAL_OFFSET)
+  fun setDropDownVerticalOffset(view: AutoCompleteTextView, offsetInDp: Int) {
+    view.dropDownVerticalOffset = dpToPixels(offsetInDp)
+  }
+
+  private fun getLayoutSizeValue(value: String): Int {
+    return if (value == MATCH_PARENT) ViewGroup.LayoutParams.MATCH_PARENT else ViewGroup.LayoutParams.WRAP_CONTENT
+  }
+
+  private fun dpToPixels(dpValue: Int): Int {
+    val pxValue = dpValue * mContext.resources.displayMetrics.density
+    return pxValue.toInt()
   }
 }
