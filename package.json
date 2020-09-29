@@ -10,7 +10,7 @@
     "braces": "^3.0.2",
     "handlebars": "^4.3.0",
     "react": "^16.8.6",
-    "react-native": "^0.62.1"
+    "react-native": "^0.63.3"
   },
   "devDependencies": {
     "babel-jest": "^24.8.0",
