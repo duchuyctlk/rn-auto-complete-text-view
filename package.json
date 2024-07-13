@@ -7,7 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "braces": "^3.0.2",
+    "braces": "^3.0.3",
     "handlebars": "^4.7.7",
     "react": "^16.8.6",
     "react-native": "^0.64.1"
